@@ -1,12 +1,12 @@
-const Persons = ({ persons }) => {
+import Person from '../components/Person'
+
+const Persons = ({ persons, onPersonDelete }) => {
 
   return (
     <ul>
       {
         persons.map(person =>
-          <li key={person.id}>
-            {person.name} {person.number}
-          </li>
+          <Person key={person.id} person={person} onPersonDelete={onPersonDelete} />
         )
       }
     </ul>

@@ -1,25 +1,23 @@
 import { useState, useEffect } from "react"
 
 import Filter from './components/Filter'
-import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
-
-import axios from 'axios'
+import Persons from './components/Persons'
+import personService from './services/persons'
 
 function App() {
-  const [persons, setPersons] = useState([])
+  const [ persons, setPersons ] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ filtered, setFiltered ] = useState(persons)
   const [ q, setQ ] = useState('')
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
-        setFiltered(response.data)
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
+        setFiltered(initialPersons)
       })
   }, [])
 
@@ -37,12 +35,17 @@ function App() {
       return
     }
 
-    const newPersons = persons.concat(person)
-    setPersons(newPersons)
-    setQ('')
-    setFiltered(newPersons)
-    setNewName('')
-    setNewNumber('')
+    personService
+      .create(person)
+      .then(returnedPerson => {
+        console.log(returnedPerson)
+        const newPersons = persons.concat(returnedPerson)
+        setPersons(newPersons)
+        setQ('')
+        setFiltered(newPersons)
+        setNewName('')
+        setNewNumber('')
+      })
   }
 
   const handleFilter = (event) => {
@@ -50,11 +53,27 @@ function App() {
     console.log(q)
     setQ(q)
     const filtered = persons.filter(person => person.name.toLowerCase().indexOf(q.toLowerCase()) >= 0)
+    console.log(filtered)
     setFiltered(filtered)
   }
 
   const handleNameChange = (event) => setNewName(event.target.value)
   const handleNumberChange = (event) => setNewNumber(event.target.value)
+
+  const handlePersonDelete = (person) => {
+    console.log(person)
+    if (window.confirm("Delete " + person.name)) {
+      personService
+        .deletePerson(person.id)
+        .then(() => {
+          const newFiltered = filtered.filter(p => p.id !== person.id)
+          const newPersons = persons.filter(p => p.id !== person.id)
+          setFiltered(newFiltered)
+          setPersons(newPersons)
+        })
+    }
+  }
+
 
   return (
     <div>
@@ -69,7 +88,7 @@ function App() {
         onSubmit={handleSubmit}
       />
       <h2>Numbers</h2>
-      <Persons persons={filtered} />
+      <Persons persons={filtered} onPersonDelete={handlePersonDelete} />
     </div>
   )
 }
