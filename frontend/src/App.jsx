@@ -31,7 +31,25 @@ function App() {
 
     const nameExists = persons.filter(person => person.name === newName).length > 0
     if (nameExists) {
-      alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        // first find person, then update
+        const person = persons.find(person => person.name === newName)
+        person.number = newNumber
+        personService
+          .update(person.id, person)
+          .then(updated => {
+            const personIndex = persons.findIndex(person => person.id === updated.id)
+            console.log(updated)
+            if (personIndex !== -1) {
+              const updatedPerson = { ...persons[personIndex], number: updated.number }
+              persons[personIndex] = updatedPerson
+              setNewName('')
+              setNewNumber('')
+              setPersons(persons)
+              setFiltered(persons.filter(person => person.name.toLowerCase().indexOf(q.toLowerCase()) >= 0))
+            }
+          })
+      }
       return
     }
 
@@ -66,9 +84,8 @@ function App() {
       personService
         .deletePerson(person.id)
         .then(() => {
-          const newFiltered = filtered.filter(p => p.id !== person.id)
           const newPersons = persons.filter(p => p.id !== person.id)
-          setFiltered(newFiltered)
+          setFiltered(newPersons.filter(person => person.name.toLowerCase().indexOf(q.toLowerCase()) >= 0))
           setPersons(newPersons)
         })
     }

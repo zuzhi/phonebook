@@ -47,11 +47,11 @@ let persons = [
     }
 ]
 
-app.get('/api/persons', (request, response) =>{
+app.get('/api/persons', (request, response) => {
   response.json(persons)
 })
 
-app.get('/api/persons/:id', (request, response) =>{
+app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   const person = persons.find(person => person.id === id)
   if (person) {
@@ -61,14 +61,14 @@ app.get('/api/persons/:id', (request, response) =>{
   }
 })
 
-app.delete('/api/persons/:id', (request, response) =>{
+app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   persons = persons.filter(person => person.id !== id)
 
   response.status(204).end()
 })
 
-app.post('/api/persons', (request, response) =>{
+app.post('/api/persons', (request, response) => {
   const body = request.body
   const id = Math.floor(Math.random() * 100000)
 
@@ -94,7 +94,24 @@ app.post('/api/persons', (request, response) =>{
   response.json(person)
 })
 
-app.get('/info', (request, response) =>{
+app.put('/api/persons/:id', (request, response) => {
+  const id = Number(request.params.id)
+  const body = request.body
+  if (!body.number) {
+    return response.status(400).json({ error: 'number missing' })
+  }
+  const personIndex = persons.findIndex(person => person.id === id)
+
+  if (personIndex !== -1) {
+    const updatedPerson = { ...persons[personIndex], number: body.number }
+    persons[personIndex] = updatedPerson
+    response.json(updatedPerson)
+  } else {
+    response.status(404).json({ error: 'person not found' })
+  }
+})
+
+app.get('/info', (request, response) => {
   response.send('Phonebook has info for ' + persons.length + ' people <br /><br />' + new Date())
 })
 
