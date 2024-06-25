@@ -3,6 +3,8 @@ import { useState, useEffect } from "react"
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
+
 import personService from './services/persons'
 
 function App() {
@@ -11,6 +13,8 @@ function App() {
   const [ newNumber, setNewNumber ] = useState('')
   const [ filtered, setFiltered ] = useState(persons)
   const [ q, setQ ] = useState('')
+  const [ message, setMessage ] = useState(null)
+  const [ messageType, setMessageType ] = useState(null)
 
   useEffect(() => {
     personService
@@ -47,6 +51,13 @@ function App() {
               setNewNumber('')
               setPersons(persons)
               setFiltered(persons.filter(person => person.name.toLowerCase().indexOf(q.toLowerCase()) >= 0))
+
+              setMessage(
+                `Updated ${updated.name}`
+              )
+              setTimeout(() => {
+                setMessage(null)
+              }, 5000)
             }
           })
       }
@@ -63,6 +74,13 @@ function App() {
         setFiltered(newPersons)
         setNewName('')
         setNewNumber('')
+
+        setMessage(
+          `Added ${returnedPerson.name}`
+        )
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
       })
   }
 
@@ -88,6 +106,20 @@ function App() {
           setFiltered(newPersons.filter(person => person.name.toLowerCase().indexOf(q.toLowerCase()) >= 0))
           setPersons(newPersons)
         })
+        .catch(error => {
+          console.log(error)
+          const newPersons = persons.filter(p => p.id !== person.id)
+          setFiltered(newPersons.filter(person => person.name.toLowerCase().indexOf(q.toLowerCase()) >= 0))
+          setPersons(newPersons)
+          setMessage(
+            `Information of ${person.name} has already been removed from server`
+          )
+          setMessageType('error')
+          setTimeout(() => {
+            setMessage(null)
+            setMessageType(null)
+          }, 5000)
+        })
     }
   }
 
@@ -95,6 +127,7 @@ function App() {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} type={messageType} />
       <Filter q={q} onFilter={handleFilter} />
       <h3>add a new</h3>
       <PersonForm
