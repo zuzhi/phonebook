@@ -28,7 +28,6 @@ function App() {
   const handleSubmit = (event) => {
     event.preventDefault()
     let person = {
-      id: Math.floor(Math.random() * 100000),
       name: newName,
       number: newNumber
     }
@@ -80,6 +79,12 @@ function App() {
         )
         setTimeout(() => {
           setSuccessMessage(null)
+        }, 5000)
+      })
+      .catch(error => {
+        setErrorMessage(error.response.data.error)
+        setTimeout(() => {
+          setErrorMessage(null)
         }, 5000)
       })
   }
