@@ -1,4 +1,4 @@
-const Notification = ({ message, type = 'success' }) => {
+const Notification = ({ message, type }) => {
   const notificationStyle = {
     color: type === 'success' ? 'green' : 'red',
     background: 'lightgrey',

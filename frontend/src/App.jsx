@@ -13,8 +13,8 @@ function App() {
   const [ newNumber, setNewNumber ] = useState('')
   const [ filtered, setFiltered ] = useState(persons)
   const [ q, setQ ] = useState('')
-  const [ message, setMessage ] = useState(null)
-  const [ messageType, setMessageType ] = useState(null)
+  const [ errorMessage, setErrorMessage ] = useState(null)
+  const [ successMessage, setSuccessMessage ] = useState(null)
 
   useEffect(() => {
     personService
@@ -52,11 +52,11 @@ function App() {
               setPersons(persons)
               setFiltered(persons.filter(person => person.name.toLowerCase().indexOf(q.toLowerCase()) >= 0))
 
-              setMessage(
+              setSuccessMessage(
                 `Updated ${updated.name}`
               )
               setTimeout(() => {
-                setMessage(null)
+                setSuccessMessage(null)
               }, 5000)
             }
           })
@@ -75,11 +75,11 @@ function App() {
         setNewName('')
         setNewNumber('')
 
-        setMessage(
+        setSuccessMessage(
           `Added ${returnedPerson.name}`
         )
         setTimeout(() => {
-          setMessage(null)
+          setSuccessMessage(null)
         }, 5000)
       })
   }
@@ -111,13 +111,11 @@ function App() {
           const newPersons = persons.filter(p => p.id !== person.id)
           setFiltered(newPersons.filter(person => person.name.toLowerCase().indexOf(q.toLowerCase()) >= 0))
           setPersons(newPersons)
-          setMessage(
+          setErrorMessage(
             `Information of ${person.name} has already been removed from server`
           )
-          setMessageType('error')
           setTimeout(() => {
-            setMessage(null)
-            setMessageType(null)
+            setErrorMessage(null)
           }, 5000)
         })
     }
@@ -127,7 +125,8 @@ function App() {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} type={messageType} />
+      <Notification message={errorMessage} type='error' />
+      <Notification message={successMessage} type='success' />
       <Filter q={q} onFilter={handleFilter} />
       <h3>add a new</h3>
       <PersonForm
