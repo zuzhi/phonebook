@@ -27,7 +27,7 @@ const phoneValidator = (value) => {
   if (!/^\d{2,3}$/.test(part1)) return false
 
   // Check if the second part contains only digits
-  return !(!/^\d+$/.test(part2));
+  return !(!/^\d+$/.test(part2))
 }
 
 const personSchema = new mongoose.Schema({

@@ -10,7 +10,7 @@ app.use(cors())
 app.use(express.static('dist'))
 
 //app.use(morgan('tiny'))
-morgan.token('body', (req, res) => {
+morgan.token('body', (req) => {
   return JSON.stringify(req.body)
 })
 
