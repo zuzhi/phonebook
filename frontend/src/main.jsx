@@ -3,20 +3,29 @@ import ReactDOM from 'react-dom/client'
 
 import App from './App.jsx'
 import InstantApp from './InstantApp.jsx'
+import SupabaseApp from './SupabaseApp.jsx'
 
 const MainApp = () => {
-  const [showInstantApp, setShowInstantApp] = useState(false)
+  const [currentApp, setCurrentApp] = useState('App')
 
-  const toggleApp = () => {
-    setShowInstantApp(!showInstantApp)
+  const toggleApp = (app) => {
+    setCurrentApp(app)
   };
 
   return (
     <div>
-      <button onClick={toggleApp}>
-        {showInstantApp ? 'Switch to App' : 'Switch to InstantApp'}
+      <button onClick={() => toggleApp('App')}>
+        {currentApp === 'App' ? 'Currently App' : 'Switch to App'}
       </button>
-      {showInstantApp ? <InstantApp /> : <App />}
+      <button onClick={() => toggleApp('InstantApp')}>
+        {currentApp === 'InstantApp' ? 'Currently InstantApp' : 'Switch to InstantApp'}
+      </button>
+      <button onClick={() => toggleApp('SupabaseApp')}>
+        {currentApp === 'SupabaseApp' ? 'Currently SupabaseApp' : 'Switch to SupabaseApp'}
+      </button>
+      {currentApp === 'App' && <App />}
+      {currentApp === 'InstantApp' && <InstantApp />}
+      {currentApp === 'SupabaseApp' && <SupabaseApp />}
     </div>
   );
 };

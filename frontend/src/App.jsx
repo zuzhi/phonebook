@@ -129,11 +129,11 @@ function App() {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
       <Notification message={errorMessage} type='error' />
       <Notification message={successMessage} type='success' />
       <Filter q={q} onFilter={handleFilter} />
-      <h3>add a new</h3>
+      <h2>Add a new</h2>
       <PersonForm
         newName={newName}
         newNumber={newNumber}
