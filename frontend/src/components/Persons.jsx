@@ -6,7 +6,7 @@ const Persons = ({ persons, onPersonDelete }) => {
     <ul>
       {
         persons.map(person =>
-          <Person key={person.id} person={person} onPersonDelete={onPersonDelete} />
+          <Person key={person.id || person.objectId} person={person} onPersonDelete={onPersonDelete} />
         )
       }
     </ul>

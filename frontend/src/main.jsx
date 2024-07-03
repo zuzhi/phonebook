@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import InstantApp from './InstantApp.jsx'
 import SupabaseApp from './SupabaseApp.jsx'
+import LeanCloudApp from './LeanCloudApp.jsx'
 
 const MainApp = () => {
   const [currentApp, setCurrentApp] = useState('App')
@@ -23,9 +24,13 @@ const MainApp = () => {
       <button onClick={() => toggleApp('SupabaseApp')}>
         {currentApp === 'SupabaseApp' ? 'Currently SupabaseApp' : 'Switch to SupabaseApp'}
       </button>
+      <button onClick={() => toggleApp('LeanCloudApp')}>
+        {currentApp === 'LeanCloudApp' ? 'Currently LeanCloudApp' : 'Switch to LeanCloudApp'}
+      </button>
       {currentApp === 'App' && <App />}
       {currentApp === 'InstantApp' && <InstantApp />}
       {currentApp === 'SupabaseApp' && <SupabaseApp />}
+      {currentApp === 'LeanCloudApp' && <LeanCloudApp />}
     </div>
   );
 };
